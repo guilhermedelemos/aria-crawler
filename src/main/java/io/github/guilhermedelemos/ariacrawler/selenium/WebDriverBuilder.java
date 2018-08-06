@@ -28,7 +28,7 @@ public class WebDriverBuilder {
         chromeOptions.addArguments("window-size=1200x600");
         chromeOptions.addArguments("start-maximized");
         if(!language.trim().isEmpty()) {
-            //chromeOptions.addArguments("–lang=pt-br");
+            //chromeOptions.addArguments("--lang=en-us"); // Debian/Ubuntu bug?
             DesiredCapabilities jsCapabilities = DesiredCapabilities.chrome();
             Map<String, Object> prefs = new HashMap<>();
             prefs.put("intl.accept_languages", language);

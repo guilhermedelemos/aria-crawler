@@ -8,4 +8,8 @@ out/
 # Gradle
 .gradle/
 build/
-
+# SQLite
+*.db
+# Other
+*.log
+*.txt

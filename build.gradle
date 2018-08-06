@@ -1,18 +1,55 @@
 plugins {
     id 'java'
     id 'application'
+    //id 'org.flywaydb.flyway' version '5.1.4'
+    id 'jacoco'
 }
 
 mainClassName = 'App'
 
 dependencies {
     compile 'com.google.guava:guava:23.0'
-        compile 'io.github.bonigarcia:webdrivermanager:2.2.4'
+    // Selenium Web Driver Manager
+    compile 'io.github.bonigarcia:webdrivermanager:2.2.4'
+    // Selenium
     compile 'org.seleniumhq.selenium:selenium-java:3.3.1'
-    testCompile 'junit:junit:4.12'
-    testCompile 'org.mockito:mockito-core:2.7.19'
+    // SQLite3
+    compile 'org.xerial:sqlite-jdbc:3.23.1'
+    // Database Migrations :^)
+    compile 'org.flywaydb:flyway-core:5.1.4'
+    // JUnit 5 :o)
+    testCompile 'org.junit.jupiter:junit-jupiter-api:5.2.0'
+    testCompile 'org.junit.jupiter:junit-jupiter-params:5.2.0'
+    testRuntime 'org.junit.jupiter:junit-jupiter-engine:5.2.0'
+    // Mockito
+    //testCompile 'org.mockito:mockito-core:2.7.19'
 }
 
 repositories {
     jcenter()
 }
+
+test {
+    useJUnitPlatform()
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+}
+
+task fullTest {
+    dependsOn 'test'
+    dependsOn 'jacocoTestReport'
+    tasks.findByName('jacocoTestReport').mustRunAfter 'test'
+    doLast {
+        println 'Unit Tests!'
+        println 'Code Coverage!'
+    }
+}
+
+/*flyway {
+    url = 'jdbc:sqlite:./data/db/local.db'
+    //user = 'aria-crawler'
+    //password = 'mySecretPwd'
+    installedBy = 'aria-crawler'
+    table = 'schema_history'
+}*/

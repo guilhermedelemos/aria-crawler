@@ -2,12 +2,14 @@ package io.github.guilhermedelemos.ariacrawler;
 
 import io.github.bonigarcia.wdm.ChromeDriverManager;
 import io.github.bonigarcia.wdm.WebDriverManager;
+import io.github.guilhermedelemos.ariacrawler.db.LocalConnection;
+import io.github.guilhermedelemos.ariacrawler.db.Migration;
 import io.github.guilhermedelemos.ariacrawler.log.Log;
 import io.github.guilhermedelemos.ariacrawler.selenium.WebDriverBuilder;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -20,6 +22,7 @@ public class App {
     public App() {
         super();
         this.log = new Log();
+        this.prepareLocalDatabase();
     }
 
     public String getGreeting() {
@@ -34,8 +37,23 @@ public class App {
 
         App app = new App();
         System.out.println(app.getGreeting());
-
         app.run();
+    }
+
+    public void prepareLocalDatabase() {
+        try {
+            LocalConnection lc = LocalConnection.getInstance();
+            Migration migration = new Migration();
+            migration.localMigration(lc.getLocal());
+            migration.logMigration(lc.getLog());
+            if (lc.getLocal().getConnection().isValid(1))
+                System.out.println("OK");
+            else
+                System.out.println("ERRO");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        System.out.println("SQLite");
     }
 
     public void run() {
@@ -51,6 +69,7 @@ public class App {
             ariaLandmarks.add("search");
 
             List<String> sites = new ArrayList<>();
+            //sites.add("http://demo.redmine.org");
             // CONTROLE
             sites.add("https://guilhermedelemos.github.io/accessible/examples/banner-aria.html");
             sites.add("https://guilhermedelemos.github.io/accessible/examples/complementary-one-aria.html");
@@ -135,7 +154,7 @@ public class App {
                     if (elements.size() > 0) {
                         log.log("Landmark " + landmark + " found");
                     } else {
-                        log.log("Landmark " + landmark + " not found");
+                        //log.log("Landmark " + landmark + " not found");
                     }
                 }
             }
