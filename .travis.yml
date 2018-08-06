@@ -4,4 +4,4 @@ jdk:
 - oraclejdk9
 - openjdk8
 - openjdk10
-- openjdk11
+#- openjdk11 # Jacoco doesn't support :(

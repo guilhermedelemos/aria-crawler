@@ -5,7 +5,7 @@ plugins {
     id 'jacoco'
 }
 
-mainClassName = 'App'
+mainClassName = 'io.github.guilhermedelemos.ariacrawler.App'
 
 dependencies {
     compile 'com.google.guava:guava:23.0'
