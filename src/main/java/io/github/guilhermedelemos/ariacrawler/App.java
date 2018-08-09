@@ -5,10 +5,16 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 import io.github.guilhermedelemos.ariacrawler.db.LocalConnection;
 import io.github.guilhermedelemos.ariacrawler.db.Migration;
 import io.github.guilhermedelemos.ariacrawler.log.Log;
+import io.github.guilhermedelemos.ariacrawler.model.Site;
 import io.github.guilhermedelemos.ariacrawler.selenium.WebDriverBuilder;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -57,6 +63,7 @@ public class App {
     }
 
     public void run() {
+        Crawler crawler = new Crawler(this.log);
         try {
             List<String> ariaLandmarks = new ArrayList<>();
             ariaLandmarks.add("banner");
@@ -82,25 +89,25 @@ public class App {
             sites.add("https://guilhermedelemos.github.io/accessible/examples/navigation-multiple-aria.html");
             sites.add("https://guilhermedelemos.github.io/accessible/examples/region-aria.html");
             sites.add("https://guilhermedelemos.github.io/accessible/examples/search-aria.html");
-            // ALEXA TOP 50 (free)
-            sites.add("http://google.com");
+            // ALEXA TOP 50 (free) 2018-08-09
+            /*sites.add("http://google.com");
             sites.add("http://youtube.com");
             sites.add("http://facebook.com");
             sites.add("http://baidu.com");
             sites.add("http://wikipedia.org");
             sites.add("http://yahoo.com");
-            sites.add("http://qq.com");
-            sites.add("http://amazon.com");
+            //sites.add("http://qq.com");
             sites.add("http://taobao.com");
+            sites.add("http://amazon.com");
             sites.add("http://tmall.com");
             sites.add("http://twitter.com");
             sites.add("http://instagram.com");
             sites.add("http://google.co.in");
             sites.add("http://sohu.com");
-            sites.add("http://live.com");
             sites.add("http://jd.com");
-            sites.add("http://reddit.com");
+            sites.add("http://live.com");
             sites.add("http://vk.com");
+            sites.add("http://reddit.com");
             sites.add("http://sina.com.cn");
             sites.add("http://weibo.com");
             sites.add("http://google.co.jp");
@@ -110,17 +117,17 @@ public class App {
             sites.add("http://yandex.ru");
             sites.add("http://netflix.com");
             //sites.add("http://pornhub.com");
-            sites.add("http://google.ru");
             sites.add("http://google.co.uk");
             sites.add("http://linkedin.com");
+            sites.add("http://google.ru");
             sites.add("http://google.com.br");
             sites.add("http://google.com.hk");
             sites.add("http://yahoo.co.jp");
             sites.add("http://csdn.net");
-            sites.add("http://twitch.tv");
-            sites.add("http://t.co");
-            sites.add("http://alipay.com");
             sites.add("http://pages.tmall.com");
+            sites.add("http://twitch.tv");
+            sites.add("http://alipay.com");
+            sites.add("http://t.co");
             sites.add("http://google.fr");
             sites.add("http://ebay.com");
             sites.add("http://google.de");
@@ -128,37 +135,50 @@ public class App {
             //sites.add("http://xvideos.com");
             sites.add("http://bing.com");
             sites.add("http://wikia.com");
-            sites.add("http://msn.com");
             sites.add("http://mail.ru");
+            sites.add("http://msn.com");
             sites.add("http://imdb.com");
             sites.add("http://aliexpress.com");
-            sites.add("http://naver.com");
+            sites.add("http://office.com");*/
             //
 
             WebDriverManager.chromedriver().setup();
-            driver = WebDriverBuilder.buildChromeDriver(false, WebDriverBuilder.LANGUAGE_EN_US);
+            this.driver = WebDriverBuilder.buildChromeDriver(true, WebDriverBuilder.LANGUAGE_EN_US);
             //ChromeDriverManager.getInstance().setup();
 
             Iterator<String> it = sites.iterator();
             while (it.hasNext()) {
                 String site = it.next();
-                log.separator();
-                log.log(site);
+                Site siteMeta = crawler.getMetaData(site);
+                this.log.separator();
+                this.log.log(site);
+                this.log.log("HTTP Status Code: " + siteMeta.getHttpStatusCode());
 
-                driver.get(site);
+                if(!crawler.siteIsValid(siteMeta)) {
+                    this.log.log("Invalid site skipped.");
+                    continue;
+                }
+                this.driver.get(site);
+                siteMeta.setUrlAfterRequest(this.driver.getCurrentUrl());
+                this.log.log("URL after request: " + siteMeta.getUrlAfterRequest());
 
                 Iterator<String> itLandmark = ariaLandmarks.iterator();
                 while (itLandmark.hasNext()) {
                     String landmark = itLandmark.next();
                     List<WebElement> elements = driver.findElements(By.cssSelector("[role=" + landmark + "]"));
                     if (elements.size() > 0) {
-                        log.log("Landmark " + landmark + " found");
+                        this.log.log("# Landmark " + landmark + " found");
+                        Iterator<WebElement> itWe = elements.iterator();
+                        while(itWe.hasNext()) {
+                            WebElement targetElement = itWe.next();
+                            crawler.extractElements(targetElement);
+                        }
+
                     } else {
-                        //log.log("Landmark " + landmark + " not found");
+                        log.log("# Landmark " + landmark + " NOT found");
                     }
                 }
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -166,4 +186,5 @@ public class App {
                 driver.close();
         }
     }
+
 }
