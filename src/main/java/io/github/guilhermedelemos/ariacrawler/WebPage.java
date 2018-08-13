@@ -1,28 +1,21 @@
-package io.github.guilhermedelemos.ariacrawler.model;
+package io.github.guilhermedelemos.ariacrawler;
 
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.List;
 
-public class Site {
-    private int rank;
+public class WebPage {
     private String url;
-    private Date data;
     private String urlAfterRequest;
     private int httpStatusCode;
+    private List<DomElement> elements;
 
-    public Site() {
+    public WebPage() {
         super();
+        this.elements = new ArrayList<>();
     }
 
-    public Site(int rank, String url, Date data) {
-        this.rank = rank;
-        this.url = url;
-        this.data = data;
-    }
-
-    public Site(String url, String urlAfterRequest, int httpStatusCode) {
-        this.url = url;
-        this.urlAfterRequest = urlAfterRequest;
-        this.httpStatusCode = httpStatusCode;
+    public void addElement(DomElement e) {
+        this.elements.add(e);
     }
 
     public String getUrl() {
@@ -47,5 +40,13 @@ public class Site {
 
     public void setHttpStatusCode(int httpStatusCode) {
         this.httpStatusCode = httpStatusCode;
+    }
+
+    public List<DomElement> getElements() {
+        return elements;
+    }
+
+    public void setElements(List<DomElement> elements) {
+        this.elements = elements;
     }
 }
