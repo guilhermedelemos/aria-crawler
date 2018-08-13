@@ -60,5 +60,12 @@ task fullTest {
 sonarqube {
     properties {
         property 'sonar.projectName', 'Aria Crawler'
+        property 'sonar.projectKey' , 'io.github.guilhermedelemos.ariacrawler'
+        property 'sonar.projectVersion', version
+        property 'sonar.sources', 'src/main'
+        property 'sonar.links.homepage', 'https://github.com/guilhermedelemos/aria-crawler'
+        property 'sonar.links.ci', 'https://travis-ci.org/guilhermedelemos/aria-crawler'
+        property 'sonar.links.scm', 'https://github.com/guilhermedelemos/aria-crawler'
+        property 'sonar.links.issue', 'https://github.com/guilhermedelemos/aria-crawler/issues'
     }
 }
