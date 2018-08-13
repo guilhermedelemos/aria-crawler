@@ -17,12 +17,12 @@ public class Log {
     }
 
     public void logWebElement(WebElement element, int level) {
-        String indentation = "";
+        StringBuilder indentation = new StringBuilder();
         for(int i=0;i<level*2;i++) {
-            indentation += "--";
+            indentation.append("--");
         }
-        if(!indentation.isEmpty()) {
-            indentation += ">";
+        if(indentation.length() > 0) {
+            indentation.append("> ");
         }
         this.log("-----");
         this.log(indentation + "id " + element.getAttribute("id"));

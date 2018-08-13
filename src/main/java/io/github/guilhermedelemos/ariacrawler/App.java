@@ -4,15 +4,14 @@ import io.github.guilhermedelemos.ariacrawler.db.LocalConnection;
 import io.github.guilhermedelemos.ariacrawler.db.Migration;
 import io.github.guilhermedelemos.ariacrawler.log.Log;
 import io.github.guilhermedelemos.ariacrawler.model.Site;
-import org.openqa.selenium.WebDriver;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class App {
 
-    private WebDriver driver;
+    private static final String GREETING_MESSAGE = "Aria Crawler.";
+    public static final String FAREWELL_MESSAGE = "Aria Crawler ended.";
     private Log log;
 
     public App() {
@@ -22,10 +21,10 @@ public class App {
     }
 
     public String getGreeting() {
-        return "Aria Crawler.";
+        return GREETING_MESSAGE;
     }
     public String farewell() {
-        return "Aria Crawler ended.";
+        return FAREWELL_MESSAGE;
     }
 
     public static void main(String[] args) {

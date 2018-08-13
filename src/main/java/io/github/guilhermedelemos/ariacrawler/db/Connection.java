@@ -5,7 +5,7 @@ import java.sql.SQLException;
 
 public class Connection {
 
-    private java.sql.Connection connection = null;
+    private java.sql.Connection conn = null;
     private String databaseName;
     private String databasePath;
     private String databaseUrl;
@@ -23,8 +23,7 @@ public class Connection {
 
     public void connect() {
         try {
-            //Class.forName("org.sqlite.JDBC");
-            this.connection = DriverManager.getConnection(this.getUrl());
+            this.conn = DriverManager.getConnection(this.getUrl());
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -35,7 +34,7 @@ public class Connection {
     }
 
     public java.sql.Connection getConnection() {
-        return connection;
+        return conn;
     }
 
     public String getDatabaseName() {

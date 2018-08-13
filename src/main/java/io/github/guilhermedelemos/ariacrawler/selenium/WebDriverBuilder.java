@@ -12,6 +12,10 @@ public class WebDriverBuilder {
     public static final String LANGUAGE_PT_BR = "pt-BR";
     public static final String LANGUAGE_EN_US = "en-US";
 
+    private WebDriverBuilder() {
+        super();
+    }
+
     public static WebDriver buildChromeDriver() {
         return buildChromeDriver(false, "");
     }
@@ -28,7 +32,6 @@ public class WebDriverBuilder {
         chromeOptions.addArguments("window-size=1200x600");
         chromeOptions.addArguments("start-maximized");
         if(!language.trim().isEmpty()) {
-            //chromeOptions.addArguments("--lang=en-us"); // Debian/Ubuntu bug?
             DesiredCapabilities jsCapabilities = DesiredCapabilities.chrome();
             Map<String, Object> prefs = new HashMap<>();
             prefs.put("intl.accept_languages", language);
@@ -36,7 +39,6 @@ public class WebDriverBuilder {
             jsCapabilities.setCapability(ChromeOptions.CAPABILITY, chromeOptions);
         }
         return new ChromeDriver(chromeOptions);
-        //driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
     }
 
 }

@@ -22,7 +22,7 @@ public class StrategySiteCSV extends StategySite {
     public List<Site> read() {
         try {
             if (this.in == null || !this.in.ready()) {
-                return null;
+                return new ArrayList<>();
             }
             List<Site> sites = new ArrayList<>();
             String line;
@@ -36,7 +36,7 @@ public class StrategySiteCSV extends StategySite {
             return sites;
         } catch (IOException | ParseException e) {
             e.printStackTrace();
-            return null;
+            return new ArrayList<>();
         }
     }
 

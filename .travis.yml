@@ -1,7 +1,15 @@
 language: java
+
 jdk:
 - oraclejdk8
 - oraclejdk9
 - openjdk8
 - openjdk10
 #- openjdk11 # Jacoco doesn't support :(
+
+addons:
+  sonarcloud:
+    organization: "guilhermedelemos-github"
+
+script:
+- sonar-scanner

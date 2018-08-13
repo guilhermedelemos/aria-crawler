@@ -28,7 +28,7 @@ public class Crawler {
     }
 
     public boolean execute(List<Site> sites) {
-        if (sites == null || sites.size() <= 0) {
+        if (sites == null || sites.isEmpty()) {
             return false;
         }
         try {
@@ -86,7 +86,7 @@ public class Crawler {
                 return false;
             }
 
-            webDriver.get(webPage.getUrl().toString());
+            webDriver.get(webPage.getUrl());
             webPage.setUrlAfterRequest(webDriver.getCurrentUrl());
             this.log.log("URL after request: " + webPage.getUrlAfterRequest());
 
@@ -105,7 +105,9 @@ public class Crawler {
             while (it.hasNext()) {
                 String landmark = it.next();
                 List<WebElement> elements = webDriver.findElements(By.cssSelector("[role=" + landmark + "]"));
-                if (elements.size() > 0) {
+                if (elements.isEmpty()) {
+                    log.log("# Landmark " + landmark + " NOT found");
+                } else {
                     this.log.log("# Landmark " + landmark + " found");
                     Iterator<WebElement> itWe = elements.iterator();
                     while (itWe.hasNext()) {
@@ -117,8 +119,6 @@ public class Crawler {
                         webPage.addElement(domElement);
                         this.extractElements(domElement);
                     }
-                } else {
-                    log.log("# Landmark " + landmark + " NOT found");
                 }
             }
             return true;
