@@ -25,7 +25,7 @@ public class App {
         return "Aria Crawler.";
     }
     public String farewell() {
-        return "Aria Crawler ended";
+        return "Aria Crawler ended.";
     }
 
     public static void main(String[] args) {
@@ -34,19 +34,10 @@ public class App {
     }
 
     public void prepareLocalDatabase() {
-        try {
-            LocalConnection lc = LocalConnection.getInstance();
-            Migration migration = new Migration();
-            migration.localMigration(lc.getLocal());
-            migration.logMigration(lc.getLog());
-            if (lc.getLocal().getConnection().isValid(1))
-                System.out.println("OK");
-            else
-                System.out.println("ERRO");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        System.out.println("SQLite");
+        LocalConnection lc = LocalConnection.getInstance();
+        Migration migration = new Migration();
+        migration.localMigration(lc.getLocal());
+        migration.logMigration(lc.getLog());
     }
 
     public void execute() {
